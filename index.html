@@ -1,10 +1,792 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Teste</title>
-</head>
-<body>
-  <h1>SE ISSO APARECER, A VERCEL TA OK</h1>
-</body>
+<!DOCTYPE html>  
+<html lang=”pt-BR”>  
+<head>  
+    <meta charset=”UTF-8”>  
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no”>  
+    <meta name=”theme-color” content=”#000000”>  
+    <meta name=”apple-mobile-web-app-capable” content=”yes”>  
+    <meta name=”apple-mobile-web-app-status-bar-style” content=”black-translucent”>  
+    <meta name=”description” content=”App completo de treino com periodização, volume semanal, PRs e muito mais”>  
+    <link rel=”manifest” href=”data:application/json;base64,eyJuYW1lIjoiVHJlaW5vIEROQSIsInNob3J0X25hbWUiOiJUcmVpbm8iLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAwMDAwMCIsInRoZW1lX2NvbG9yIjoiIzAwMDAwMCIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSXhNakFpSUdobGFXZG9kRDBpTVRJd0lqNDhjbVZqZENCM2FXUjBhRDBpTVRJd0lpQm9aV2xuYUhROUlqRXlNQ0lnWm1sc2JEMGlJekF3TUNJdlBqd3ZjM1puUGc9PSIsInNpemVzIjoiMTIweDEyMCIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==”>  
+    <title>💪 Treino DNA – Sistema Completo</title>  
+    <script crossorigin src=https://unpkg.com/react@18/umd/react.production.min.js></script>  
+    <script crossorigin src=https://unpkg.com/react-dom@18/umd/react-dom.production.min.js></script>  
+    <script src=https://unpkg.com/@babel/standalone/babel.min.js></script>  
+    <script src=https://cdn.tailwindcss.com></script>  
+    <style>  
+•	{ margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }  
+        Body {   
+            Margin: 0;   
+            Padding: 0;   
+            Font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;  
+            Overflow-x: hidden;  
+            -webkit-font-smoothing: antialiased;  
+        }  
+        Input, textarea, select, button { font-family: inherit; }  
+        Input[type=”number”]::-webkit-inner-spin-button,  
+        Input[type=”number”]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }  
+        Input[type=”number”] { -moz-appearance: textfield; }  
+    </style>  
+</head>  
+<body>  
+    <div id=”root”></div>  
+  
+    <script type=”text/babel”>  
+        Const { useState, useEffect } = React;  
+  
+        // ÍCONES SVG  
+        Const Icon = ({ name, size = 20, className = “” }) => {  
+            Const icons = {  
+                ArrowLeft: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><path d=”M19 12H5M12 19l-7-7 7-7”/></svg>,  
+                Plus: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><path d=”M12 5v14M5 12h14”/></svg>,  
+                Play: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><polygon points=”5 3 19 12 5 21 5 3”/></svg>,  
+                Clock: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><circle cx=”12” cy=”12” r=”10”/><polyline points=”12 6 12 12 16 14”/></svg>,  
+                Check: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><polyline points=”20 6 9 17 4 12”/></svg>,  
+                Trash: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><polyline points=”3 6 5 6 21 6”/><path d=”M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2”/></svg>,  
+                Edit: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><path d=”M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7”/><path d=”M18.5 2.5ª2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z”/></svg>,  
+                Calendar: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><rect x=”3” y=”4” width=”18” height=”18” rx=”2” ry=”2”/><line x1=”16” y1=”2” x2=”16” y2=”6”/><line x1=”8” y1=”2” x2=”8” y2=”6”/><line x1=”3” y1=”10” x2=”21” y2=”10”/></svg>,  
+                Settings: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><circle cx=”12” cy=”12” r=”3”/><path d=”M12 1v6m0 6v6”/></svg>,  
+                BarChart: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><line x1=”12” y1=”20” x2=”12” y2=”10”/><line x1=”18” y1=”20” x2=”18” y2=”4”/><line x1=”6” y1=”20” x2=”6” y2=”16”/></svg>,  
+                Download: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><path d=”M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4”/><polyline points=”7 10 12 15 17 10”/><line x1=”12” y1=”15” x2=”12” y2=”3”/></svg>,  
+                Upload: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><path d=”M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4”/><polyline points=”17 8 12 3 7 8”/><line x1=”12” y1=”3” x2=”12” y2=”15”/></svg>,  
+                Alert: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><circle cx=”12” cy=”12” r=”10”/><line x1=”12” y1=”8” x2=”12” y2=”12”/><line x1=”12” y1=”16” x2=”12.01” y2=”16”/></svg>,  
+                Flame: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><path d=”M8.5 14.5ª2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5ª7 7 0 1 1-14 0c0-1.153.433-2.294 1-3ª2.5 2.5 0 0 0 2.5 2.5z”/></svg>,  
+                Award: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><circle cx=”12” cy=”8” r=”7”/><polyline points=”8.21 13.89 7 23 12 20 17 23 15.79 13.88”/></svg>,  
+                TrendUp: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><polyline points=”23 6 13.5 15.5 8.5 10.5 1 18”/><polyline points=”17 6 23 6 23 12”/></svg>,  
+                Pause: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><rect x=”6” y=”4” width=”4” height=”16”/><rect x=”14” y=”4” width=”4” height=”16”/></svg>,  
+                Calculator: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><rect x=”4” y=”2” width=”16” height=”20” rx=”2”/><line x1=”8” y1=”6” x2=”16” y2=”6”/><line x1=”8” y1=”10” x2=”16” y2=”10”/><line x1=”8” y1=”14” x2=”10” y2=”14”/><line x1=”14” y1=”14” x2=”16” y2=”14”/><line x1=”8” y1=”18” x2=”10” y2=”18”/><line x1=”14” y1=”18” x2=”16” y2=”18”/></svg>,  
+                Share: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><circle cx=”18” cy=”5” r=”3”/><circle cx=”6” cy=”12” r=”3”/><circle cx=”18” cy=”19” r=”3”/><line x1=”8.59” y1=”13.51” x2=”15.42” y2=”17.49”/><line x1=”15.41” y1=”6.51” x2=”8.59” y2=”10.49”/></svg>,  
+                X: <svg width={size} height={size} viewBox=”0 0 24 24” fill=”none” stroke=”currentColor” strokeWidth=”2” strokeLinecap=”round” strokeLinejoin=”round”><line x1=”18” y1=”6” x2=”6” y2=”18”/><line x1=”6” y1=”6” x2=”18” y2=”18”/></svg>,  
+            };  
+            Return <span className={className}>{icons[name] || null}</span>;  
+        };  
+  
+        // DADOS DOS TREINOS  
+        Const TREINO_BASE = {  
+            Segunda: { nome: “PULL”, cor: “border-cyan-500”, exercicios: [  
+                { id: 1, nome: “Puxada alta”, series: 3, reps: “6-8”, grupos: [“costas”] },  
+                { id: 2, nome: “Remada curvada”, series: 3, reps: “8-10”, grupos: [“costas”] },  
+                { id: 3, nome: “Face pull”, series: 3, reps: “12-15”, grupos: [“ombros”] },  
+                { id: 4, nome: “Rosca direta”, series: 3, reps: “8-12”, grupos: [“biceps”] },  
+                { id: 5, nome: “Rosca martelo”, series: 3, reps: “10-12”, grupos: [“biceps”] }  
+            ]},  
+            Terca: { nome: “PUSH”, cor: “border-orange-500”, exercicios: [  
+                { id: 6, nome: “Supino reto”, series: 3, reps: “6-8”, grupos: [“peito”] },  
+                { id: 7, nome: “Supino inclinado”, series: 3, reps: “8-10”, grupos: [“peito”] },  
+                { id: 8, nome: “Desenvolvimento”, series: 3, reps: “6-8”, grupos: [“ombros”] },  
+                { id: 9, nome: “Elevação lateral”, series: 4, reps: “10-15”, grupos: [“ombros”] },  
+                { id: 10, nome: “Crossover”, series: 3, reps: “10-12”, grupos: [“peito”] },  
+                { id: 11, nome: “Tríceps francês”, series: 3, reps: “10-12”, grupos: [“triceps”] }  
+            ]},  
+            Quarta: { nome: “LEGS”, cor: “border-red-500”, exercicios: [  
+                { id: 12, nome: “Agachamento”, series: 3, reps: “6-8”, grupos: [“pernas”] },  
+                { id: 13, nome: “Leg press”, series: 3, reps: “8-10”, grupos: [“pernas”] },  
+                { id: 14, nome: “Terra romeno”, series: 3, reps: “8-10”, grupos: [“pernas”] },  
+                { id: 15, nome: “Extensora”, series: 3, reps: “10-12”, grupos: [“pernas”] },  
+                { id: 16, nome: “Panturrilha”, series: 4, reps: “10-15”, grupos: [“pernas”] }  
+            ]},  
+            Sexta: { nome: “UPPER”, cor: “border-cyan-500”, exercicios: [  
+                { id: 17, nome: “Supino halteres”, series: 3, reps: “8-10”, grupos: [“peito”] },  
+                { id: 18, nome: “Remada curvada”, series: 3, reps: “8-10”, grupos: [“costas”] },  
+                { id: 19, nome: “Puxada alta”, series: 3, reps: “10-12”, grupos: [“costas”] },  
+                { id: 20, nome: “Desenvolvimento”, series: 3, reps: “10-12”, grupos: [“ombros”] },  
+                { id: 21, nome: “Rosca EZ”, series: 3, reps: “10-12”, grupos: [“biceps”] },  
+                { id: 22, nome: “Tríceps polia”, series: 3, reps: “10-12”, grupos: [“triceps”] }  
+            ]},  
+            Sabado: { nome: “LOWER”, cor: “border-purple-500”, exercicios: [  
+                { id: 23, nome: “Terra”, series: 3, reps: “5-6”, grupos: [“pernas”] },  
+                { id: 24, nome: “Leg press”, series: 3, reps: “8-10”, grupos: [“pernas”] },  
+                { id: 25, nome: “Mesa flexora”, series: 3, reps: “10-12”, grupos: [“pernas”] },  
+                { id: 26, nome: “Hip thrust”, series: 3, reps: “8-12”, grupos: [“pernas”] },  
+                { id: 27, nome: “Panturrilha leg”, series: 4, reps: “10-15”, grupos: [“pernas”] }  
+            ]}  
+        };  
+  
+        Const PROGRAMAS = {  
+            Base: { nome: “BASE”, dados: JSON.parse(JSON.stringify(TREINO_BASE)) },  
+            Costas: { nome: “VOL COSTAS”, dados: JSON.parse(JSON.stringify(TREINO_BASE)) },  
+            Peito: { nome: “VOL PEITO”, dados: JSON.parse(JSON.stringify(TREINO_BASE)) },  
+            Pernas: { nome: “VOL PERNAS”, dados: JSON.parse(JSON.stringify(TREINO_BASE)) },  
+            Deload: { nome: “DELOAD”, dados: JSON.parse(JSON.stringify(TREINO_BASE)) }  
+        };
+// COMPONENTE PRINCIPAL  
+        Function App() {  
+            Const [tela, setTela] = useState(‘home’);  
+            Const [progSel, setProgSel] = useState(‘base’);  
+            Const [diaSel, setDiaSel] = useState(null);  
+            Const [series, setSeries] = useState([]);  
+            Const [programas, setProgramas] = useState(PROGRAMAS);  
+            Const [treinoAtivo, setTreinoAtivo] = useState(null);  
+            Const [notif, setNotif] = useState(null);  
+            Const [config, setConfig] = useState({ descanso: 90 });  
+            Const [timer, setTimer] = useState(null);  
+            Const [timerAtivo, setTimerAtivo] = useState(false);  
+            Const [timerPausado, setTimerPausado] = useState(false);  
+            Const [notaTreino, setNotaTreino] = useState(‘’);  
+            Const [ultimoDeload, setUltimoDeload] = useState(null);  
+            Const [editandoSerie, setEditandoSerie] = useState(null);  
+            Const [modalCalc, setModalCalc] = useState(false);  
+            Const [rm1RM, setRm1RM] = useState(‘’);  
+  
+            useEffect(() => {  
+                const s1 = localStorage.getItem(‘treinoSeries’);  
+                if (s1) setSeries(JSON.parse(s1));  
+                const s2 = localStorage.getItem(‘programasCustom’);  
+                if (s2) setProgramas(JSON.parse(s2));  
+                const s3 = localStorage.getItem(‘ultimoDeload’);  
+                if (s3) setUltimoDeload(s3);  
+                const s4 = localStorage.getItem(‘config’);  
+                if (s4) setConfig(JSON.parse(s4));  
+            }, []);  
+  
+            useEffect(() => {  
+                let interval;  
+                if (timerAtivo && !timerPausado && timer > 0) {  
+                    interval = setInterval(() => setTimer(t => t – 1), 1000);  
+                } else if (timer === 0 && timerAtivo) {  
+                    If (‘vibrate’ in navigator) navigator.vibrate([200, 100, 200]);  
+                    setNotif({ tipo: ‘success’, msg: ‘⏰ DESCANSO COMPLETO!’ });  
+                    setTimeout(() => setNotif(null), 3000);  
+                    setTimerAtivo(false);  
+                }  
+                Return () => clearInterval(interval);  
+            }, [timerAtivo, timerPausado, timer]);  
+  
+            Const getDia = () => [‘domingo’,’segunda’,’terca’,’quarta’,’quinta’,’sexta’,’sabado’][new Date().getDay()];  
+  
+            Const iniciar = () => {  
+                Const dia = getDia();  
+                Const tr = programas[progSel].dados[dia];  
+                If (!tr) {  
+                    setNotif({ tipo: ‘warn’, msg: `${dia.toUpperCase()} – DESCANSO` });  
+                    setTimeout(() => setNotif(null), 2000);  
+                    return;  
+                }  
+                setTreinoAtivo({ prog: progSel, dia, treino: tr });  
+                setNotif({ tipo: ‘success’, msg: `✅ INICIADO: ${tr.nome}` });  
+                setTimeout(() => setNotif(null), 2000);  
+            };  
+  
+            Const registrarSerie = (prog, dia, ex, peso, reps, rir, aquec, tipo, nota) => {  
+                Const nova = {   
+                    Id: Date.now(), prog, dia, ex, peso, reps, rir, aquec, tipo: tipo || ‘normal’, nota: nota || ‘’,  
+                    Data: new Date().toISOString(),  
+                    Rm: aquec ? 0 : Math.round(peso * (1 + reps / 30))  
+                };  
+                Const novasSeries = [...series, nova];  
+                setSeries(novasSeries);  
+                localStorage.setItem(‘treinoSeries’, JSON.stringify(novasSeries));  
+                  
+                if (!aquec) {  
+                    setTimer(config.descanso);  
+                    setTimerAtivo(true);  
+                    setTimerPausado(false);  
+                }  
+            };  
+  
+            Const editarSerie = (id, peso, reps, rir) => {  
+                Const novasSeries = series.map(s => s.id === id ? {...s, peso, reps, rir, rm: Math.round(peso * (1 + reps / 30))} : s);  
+                setSeries(novasSeries);  
+                localStorage.setItem(‘treinoSeries’, JSON.stringify(novasSeries));  
+                setEditandoSerie(null);  
+            };  
+  
+            Const deletarSerie = (id) => {  
+                If (window.confirm(‘Deletar esta série?’)) {  
+                    Const novasSeries = series.filter(s => s.id !== id);  
+                    setSeries(novasSeries);  
+                    localStorage.setItem(‘treinoSeries’, JSON.stringify(novasSeries));  
+                }  
+            };  
+  
+            Const finalizarTreino = () => {  
+                If (notaTreino) {  
+                    Const nota = { id: Date.now(), prog: treinoAtivo.prog, dia: treinoAtivo.dia, nota: notaTreino, data: new Date().toISOString() };  
+                    Const notas = JSON.parse(localStorage.getItem(‘notas’) || ‘[]’);  
+                    localStorage.setItem(‘notas’, JSON.stringify([...notas, nota]));  
+                }  
+                If (progSel === ‘deload’) {  
+                    localStorage.setItem(‘ultimoDeload’, new Date().toISOString());  
+                    setUltimoDeload(new Date().toISOString());  
+                }  
+                setTreinoAtivo(null);  
+                setNotaTreino(‘’);  
+                setNotif({ tipo: ‘success’, msg: ‘✅ TREINO FINALIZADO!’ });  
+                setTimeout(() => setNotif(null), 2000);  
+            };  
+  
+            Const getSugestao = (ex) => {  
+                Const hoje = new Date().toISOString().split(‘T’)[0];  
+                Const ultimas = series.filter(s => s.ex === ex.nome && !s.aquec && s.data.split(‘T’)[0] !== hoje).slice(-3);  
+                If (!ultimas.length) return null;  
+                Const ult = ultimas[ultimas.length – 1];  
+                Const repsRange = ex.reps.split(‘-‘).map(Number);  
+                Const repsMax = repsRange[1] || repsRange[0];  
+                  
+                If (ult.reps >= repsMax && ult.rir <= 2) {  
+                    Return { msg: `Última: ${ult.peso}kg×${ult.reps} → ${ult.peso + 2}kg×${repsRange[0]}`, status: ‘progress’ };  
+                } else if (ult.reps < repsMax) {  
+                    Return { msg: `Última: ${ult.peso}kg×${ult.reps} → ${ult.peso}kg×${ult.reps + 1}`, status: ‘maintain’ };  
+                }  
+                Return { msg: `Última: ${ult.peso}kg×${ult.reps}`, status: ‘ok’ };  
+            };  
+  
+            Const getAquecimento = (peso) => {  
+                Const p = parseFloat(peso);  
+                If (!p || p < 20) return [];  
+                Return [  
+                    { peso: 20, reps: 10, nota: ‘Barra vazia’ },  
+                    { peso: Math.round(p * 0.5), reps: 8, nota: ‘50% carga’ },  
+                    { peso: Math.round(p * 0.75), reps: 6, nota: ‘75% carga’ }  
+                ];  
+            };  
+  
+            Const getVolumeSemanal = () => {  
+                Const hoje = new Date();  
+                Const semanaAtras = new Date(hoje – 7 * 24 * 60 * 60 * 1000);  
+                Const seriesSemana = series.filter(s => new Date(s.data) >= semanaAtras && !s.aquec);  
+                  
+                Const vol = {};  
+                seriesSemana.forEach(s => {  
+                    const prog = programas[s.prog];  
+                    if (!prog) return;  
+                    const ex = prog.dados[s.dia]?.exercicios.find(e => e.nome === s.ex);  
+                    if (ex) {  
+                        ex.grupos.forEach(g => {  
+                            if (!vol[g]) vol[g] = { total: 0, efetivas: 0, tonelagem: 0 };  
+                            vol[g].total++;  
+                            if (s.rir <= 2) vol[g].efetivas++;  
+                            vol[g].tonelagem += s.peso * s.reps;  
+                        });  
+                    }  
+                });  
+                return vol;  
+            };  
+  
+            const getAlertaDeload = () => {  
+                if (!ultimoDeload) return null;  
+                const semanas = Math.floor((new Date() - new Date(ultimoDeload)) / (7 * 24 * 60 * 60 * 1000));  
+                if (semanas >= 4) return '⚠️ Considere deload (4+ semanas)';  
+                  
+                const hoje = new Date();  
+                const semanaAtras = new Date(hoje - 7 * 24 * 60 * 60 * 1000);  
+                const seriesRecentes = series.filter(s => new Date(s.data) >= semanaAtras && !s.aquec);  
+                const quedas = {};  
+                  
+                seriesRecentes.forEach(s => {  
+                    const antigas = series.filter(se => se.ex === s.ex && !se.aquec && new Date(se.data) < semanaAtras).slice(-3);  
+                    if (antigas.length) {  
+                        const mediaAntiga = antigas.reduce((acc, se) => acc + se.reps, 0) / antigas.length;  
+                        if (s.reps < mediaAntiga - 1) quedas[s.ex] = (quedas[s.ex] || 0) + 1;  
+                    }  
+                });  
+                  
+                if (Object.values(quedas).filter(q => q >= 2).length >= 2) {  
+                    return '🔴 Performance caiu em múltiplos exercícios';  
+                }  
+                return null;  
+            };  
+  
+            const getPRs = () => {  
+                const prs = {};  
+                series.filter(s => !s.aquec).forEach(s => {  
+                    if (!prs[s.ex] || s.rm > prs[s.ex].rm) {  
+                        prs[s.ex] = { rm: s.rm, peso: s.peso, reps: s.reps, data: s.data };  
+                    }  
+                });  
+                return prs;  
+            };  
+  
+            const exportarPDF = () => {  
+                const vol = getVolumeSemanal();  
+                const prs = getPRs();  
+                let txt = `🏋️ TREINO DNA - RELATÓRIO\n\nPrograma: ${programas[progSel].nome}\nData: ${new Date().toLocaleDateString('pt-BR')}\n\n📊 VOLUME SEMANAL:\n`;  
+                Object.entries(vol).forEach(([g, v]) => {  
+                    txt += `${g.toUpperCase()}: ${v.efetivas}/${v.total} efetivas (${v.tonelagem.toLocaleString()}kg)\n`;  
+                });  
+                txt += `\n🏆 RECORDES PESSOAIS:\n`;  
+                Object.entries(prs).slice(0, 15).forEach(([ex, pr]) => {  
+                    txt += `${ex}: ${pr.rm}kg (${pr.peso}kg × ${pr.reps} reps)\n`;  
+                });  
+                const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });  
+                const url = URL.createObjectURL(blob);  
+                const a = document.createElement('a');  
+                a.href = url;  
+                a.download = `treino_dna_${new Date().toISOString().split('T')[0]}.txt`;  
+                a.click();  
+                URL.revokeObjectURL(url);  
+                setNotif({ tipo: 'success', msg: '📄 RELATÓRIO EXPORTADO!' });  
+                setTimeout(() => setNotif(null), 2000);  
+            };  
+  
+            const backupDados = () => {  
+                const backup = { series, programas, config, ultimoDeload, versao: '2.0', data: new Date().toISOString() };  
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });  
+                const url = URL.createObjectURL(blob);  
+                const a = document.createElement('a');  
+                a.href = url;  
+                a.download = `backup_treino_${new Date().toISOString().split('T')[0]}.json`;  
+                a.click();  
+                URL.revokeObjectURL(url);  
+                setNotif({ tipo: 'success', msg: '💾 BACKUP CRIADO!' });  
+                setTimeout(() => setNotif(null), 2000);  
+            };  
+  
+            const restaurarBackup = (e) => {  
+                const file = e.target.files[0];  
+                if (!file) return;  
+                const reader = new FileReader();  
+                reader.onload = (ev) => {  
+                    try {  
+                        const backup = JSON.parse(ev.target.result);  
+                        if (backup.series) {  
+                            setSeries(backup.series);  
+                            localStorage.setItem('treinoSeries', JSON.stringify(backup.series));  
+                        }  
+                        if (backup.programas) {  
+                            setProgramas(backup.programas);  
+                            localStorage.setItem('programasCustom', JSON.stringify(backup.programas));  
+                        }  
+                        if (backup.config) {  
+                            setConfig(backup.config);  
+                            localStorage.setItem('config', JSON.stringify(backup.config));  
+                        }  
+                        if (backup.ultimoDeload) {  
+                            setUltimoDeload(backup.ultimoDeload);  
+                            localStorage.setItem('ultimoDeload', backup.ultimoDeload);  
+                        }  
+                        setNotif({ tipo: 'success', msg: '✅ BACKUP RESTAURADO!' });  
+                        setTimeout(() => setNotif(null), 2000);  
+                    } catch (err) {  
+                        setNotif({ tipo: 'error', msg: '❌ ERRO AO RESTAURAR BACKUP' });  
+                        setTimeout(() => setNotif(null), 2000);  
+                    }  
+                };  
+                reader.readAsText(file);  
+            };  
+  
+            const compartilharTreino = () => {  
+                const hoje = new Date().toISOString().split('T')[0];  
+                const seriesHoje = series.filter(s => s.data.split('T')[0] === hoje);  
+                let txt = `💪 MEU TREINO DNA - ${new Date().toLocaleDateString('pt-BR')}\n\n`;  
+                const porEx = {};  
+                seriesHoje.forEach(s => {  
+                    if (!porEx[s.ex]) porEx[s.ex] = [];  
+                    porEx[s.ex].push(s);  
+                });  
+                Object.entries(porEx).forEach(([ex, ss]) => {  
+                    txt += `${ex}:\n`;  
+                    ss.forEach((s, i) => {  
+                        txt += `  ${i+1}. ${s.peso}kg × ${s.reps} reps (RIR ${s.rir})${s.aquec ? ' [AQUEC]' : ''}${s.tipo !== 'normal' ? ` [${s.tipo.toUpperCase()}]` : ''}\n`;  
+                        if (s.nota) txt += `     Nota: ${s.nota}\n`;  
+                    });  
+                    txt += '\n';  
+                });  
+                if (navigator.share) {  
+                    navigator.share({ text: txt, title: 'Meu Treino DNA' }).catch(() => {});  
+                } else {  
+                    navigator.clipboard.writeText(txt).then(() => {  
+                        setNotif({ tipo: 'success', msg: '📋 TREINO COPIADO!' });  
+                        setTimeout(() => setNotif(null), 2000);  
+                    });  
+                }  
+            };  
+  
+            const adicionarExercicio = (dia) => {  
+                const nome = prompt('Nome do exercício:');  
+                const series = prompt('Número de séries (ex: 3):');  
+                const reps = prompt('Faixa de reps (ex: 8-10):');  
+                const grupo = prompt('Grupo muscular (peito, costas, pernas, etc):');  
+                if (!nome || !series || !reps || !grupo) return;  
+                  
+                const novoEx = {   
+                    id: Date.now(),   
+                    nome,   
+                    series: parseInt(series),   
+                    reps,   
+                    grupos: [grupo.toLowerCase()]   
+                };  
+                  
+                const novosProgramas = {...programas};  
+                novosProgramas[progSel].dados[dia].exercicios.push(novoEx);  
+                setProgramas(novosProgramas);  
+                localStorage.setItem('programasCustom', JSON.stringify(novosProgramas));  
+                setNotif({ tipo: 'success', msg: '✅ EXERCÍCIO ADICIONADO!' });  
+                setTimeout(() => setNotif(null), 2000);  
+            };  
+  
+            const removerExercicio = (dia, exId) => {  
+                if (!window.confirm('Remover este exercício do programa?')) return;  
+                const novosProgramas = {...programas};  
+                novosProgramas[progSel].dados[dia].exercicios = novosProgramas[progSel].dados[dia].exercicios.filter(e => e.id !== exId);  
+                setProgramas(novosProgramas);  
+                localStorage.setItem('programasCustom', JSON.stringify(novosProgramas));  
+                setNotif({ tipo: 'success', msg: '🗑️ EXERCÍCIO REMOVIDO!' });  
+                setTimeout(() => setNotif(null), 2000);  
+            };
+// TELA HOME  
+            If (tela === ‘home’) {  
+                Const vol = getVolumeSemanal();  
+                Const alerta = getAlertaDeload();  
+                Const stats = {   
+                    Vol: series.reduce((a,s) => a + (s.peso * s.reps), 0),   
+                    Dias: [...new Set(series.map(s => s.data.split(‘T’)[0]))].length,  
+                    Prs: Object.keys(getPRs()).length  
+                };  
+                  
+                Return (  
+                    <div className=”min-h-screen bg-black text-gray-100 p-4”>  
+                        <div className=”max-w-5xl mx-auto”>  
+                            {notif && (  
+                                <div className={`mb-4 p-3 rounded border-l-4 ${notif.tipo === ‘success’ ? ‘bg-emerald-950 border-emerald-500’ : notif.tipo === ‘error’ ? ‘bg-red-950 border-red-500’ : ‘bg-orange-950 border-orange-500’}`}>  
+                                    <p className=”font-bold”>{notif.msg}</p>  
+                                </div>  
+                            )}  
+  
+                            {alerta && (  
+                                <div className=”mb-4 p-3 rounded border-l-4 bg-red-950 border-red-500”>  
+                                    <div className=”flex items-center gap-2”>  
+                                        <Icon name=”Alert” size={20} />  
+                                        <p className=”font-bold text-red-400”>{alerta}</p>  
+                                    </div>  
+                                </div>  
+                            )}  
+  
+                            <div className=”flex justify-between items-start mb-6”>  
+                                <div>  
+                                    <h1 className=”text-2xl font-bold”>💪 TREINO DNA</h1>  
+                                    <p className=”text-xs text-gray-500 uppercase”>Sistema Completo de Periodização</p>  
+                                </div>  
+                                <div className=”flex gap-2”>  
+                                    <button onClick={() => setModalCalc(true)} className=”bg-zinc-900 border border-zinc-700 p-2 rounded hover:bg-zinc-800”>  
+                                        <Icon name=”Calculator” size={20} />  
+                                    </button>  
+                                    <button onClick={() => setTela(‘volume’)} className=”bg-zinc-900 border border-zinc-700 p-2 rounded hover:bg-zinc-800”>  
+                                        <Icon name=”BarChart” size={20} />  
+                                    </button>  
+                                    <button onClick={() => setTela(‘hist’)} className=”bg-zinc-900 border border-zinc-700 p-2 rounded hover:bg-zinc-800”>  
+                                        <Icon name=”Calendar” size={20} />  
+                                    </button>  
+                                    <button onClick={() => setTela(‘config’)} className=”bg-zinc-900 border border-zinc-700 p-2 rounded hover:bg-zinc-800”>  
+                                        <Icon name=”Settings” size={20} />  
+                                    </button>  
+                                </div>  
+                            </div>  
+  
+                            <div className=”grid grid-cols-3 gap-3 mb-4”>  
+                                <div className=”bg-zinc-900 border border-zinc-800 p-3 rounded”>  
+                                    <p className=”text-xs text-gray-500”>Volume Total</p>  
+                                    <p className=”text-xl font-bold text-cyan-400”>{stats.vol.toLocaleString()}kg</p>  
+                                </div>  
+                                <div className=”bg-zinc-900 border border-zinc-800 p-3 rounded”>  
+                                    <div className=”flex items-center gap-2”>  
+                                        <Icon name=”Flame” size={16} />  
+                                        <p className=”text-xs text-gray-500”>Streak</p>  
+                                    </div>  
+                                    <p className=”text-xl font-bold text-orange-400”>{stats.dias}</p>  
+                                </div>  
+                                <div className=”bg-zinc-900 border border-zinc-800 p-3 rounded”>  
+                                    <div className=”flex items-center gap-2”>  
+                                        <Icon name=”Award” size={16} />  
+                                        <p className=”text-xs text-gray-500”>PRs</p>  
+                                    </div>  
+                                    <p className=”text-xl font-bold text-purple-400”>{stats.prs}</p>  
+                                </div>  
+                            </div>  
+  
+                            <div className=”mb-4 bg-zinc-900 border border-zinc-800 rounded p-3”>  
+                                <p className=”text-xs text-gray-500 mb-2 uppercase”>Volume Semanal (Séries Efetivas RIR 0-2)</p>  
+                                <div className=”grid grid-cols-2 gap-2”>  
+                                    {Object.entries(vol).map(([g, v]) => (  
+                                        <div key={g} className=”flex justify-between”>  
+                                            <span className=”text-sm capitalize”>{g}:</span>  
+                                            <span className={`font-bold ${v.efetivas < 10 ? ‘text-red-400’ : v.efetivas > 20 ? ‘text-orange-400’ : ‘text-emerald-400’}`}>  
+                                                {v.efetivas}/{v.total}  
+                                            </span>  
+                                        </div>  
+                                    ))}  
+                                </div>  
+                            </div>  
+  
+                            {treinoAtivo && (  
+                                <div className=”mb-4 bg-gradient-to-r from-emerald-950 to-cyan-950 border border-emerald-700 p-4 rounded”>  
+                                    <div className=”flex justify-between items-center”>  
+                                        <div>  
+                                            <div className=”flex items-center gap-2 mb-1”>  
+                                                <Icon name=”Clock” size={16} />  
+                                                <span className=”text-xs text-emerald-400 font-bold”>EM ANDAMENTO</span>  
+                                            </div>  
+                                            <h3 className=”text-xl font-bold”>{treinoAtivo.treino.nome}</h3>  
+                                            <p className=”text-sm text-gray-400 capitalize”>{treinoAtivo.dia}</p>  
+                                        </div>  
+                                        <div className=”flex gap-2”>  
+                                            <button onClick={compartilharTreino} className=”bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded”>  
+                                                <Icon name=”Share” size={16} />  
+                                            </button>  
+                                            <button onClick={() => setTela(‘finalizar’)} className=”bg-red-600 hover:bg-red-700 px-3 py-2 rounded”>  
+                                                <Icon name=”Check” size={16} />  
+                                            </button>  
+                                        </div>  
+                                    </div>  
+                                </div>  
+                            )}  
+  
+                            <button onClick={iniciar} className=”w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded font-bold mb-4 flex items-center justify-center gap-2 active:scale-95 transition-transform”>  
+                                <Icon name=”Play” size={20} />  
+                                INICIAR TREINO HOJE  
+                            </button>  
+  
+                            <div className=”grid gap-2”>  
+                                {Object.entries(programas).map(([k, p]) => (  
+                                    <button key={k} onClick={() => { setProgSel(k); setTela(‘prog’); }}  
+                                        className={`bg-zinc-800 border-l-4 ${k === ‘base’ ? ‘border-zinc-600’ : k === ‘costas’ ? ‘border-cyan-500’ : k === ‘peito’ ? ‘border-orange-500’ : k === ‘pernas’ ? ‘border-red-500’ : ‘border-purple-500’} p-4 text-left hover:bg-zinc-700 ${progSel === k ? ‘ring-2 ring-cyan-500’ : ‘’} active:scale-98 transition-all`}>  
+                                        <div className=”flex justify-between items-center”>  
+                                            <div>  
+                                                <h2 className=”font-bold”>{p.nome}</h2>  
+                                                <p className=”text-xs text-gray-400”>{Object.keys(p.dados).length} treinos semanais</p>  
+                                            </div>  
+                                            {progSel === k && <span className=”text-xs bg-cyan-600 px-2 py-1 rounded”>ATIVO</span>}  
+                                        </div>  
+                                    </button>  
+                                ))}  
+                            </div>  
+  
+                            {modalCalc && (  
+                                <div className=”fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50” onClick={() => setModalCalc(false)}>  
+                                    <div className=”bg-zinc-900 p-6 rounded-lg max-w-sm w-full” onClick={(e) => e.stopPropagation()}>  
+                                        <div className=”flex justify-between items-center mb-4”>  
+                                            <h2 className=”text-xl font-bold”>Calculadora % RM</h2>  
+                                            <button onClick={() => setModalCalc(false)} className=”text-gray-400 hover:text-white”>  
+                                                <Icon name=”X” size={24} />  
+                                            </button>  
+                                        </div>  
+                                        <input  
+                                            Type=”number”  
+                                            Value={rm1RM}  
+                                            onChange={(e) => setRm1RM(e.target.value)}  
+                                            placeholder=”Digite seu 1RM (kg)”  
+                                            className=”w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-3 mb-4 text-white”  
+                                        />  
+                                        {rm1RM && (  
+                                            <div className=”space-y-2”>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>90%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.9)}kg</span></div>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>85%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.85)}kg</span></div>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>80%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.8)}kg</span></div>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>75%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.75)}kg</span></div>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>70%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.7)}kg</span></div>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>60%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.6)}kg</span></div>  
+                                                <div className=”flex justify-between p-2 bg-zinc-800 rounded”><span>50%:</span><span className=”font-bold text-cyan-400”>{Math.round(rm1RM * 0.5)}kg</span></div>  
+                                            </div>  
+                                        )}  
+                                    </div>  
+                                </div>  
+                            )}  
+                        </div>  
+                    </div>  
+                );  
+            }  
+  
+            // TELA PROGRAMA  
+            If (tela === ‘prog’) {  
+                Const p = programas[progSel];  
+                Return (  
+                    <div className=”min-h-screen bg-black text-gray-100 p-4”>  
+                        <div className=”max-w-5xl mx-auto”>  
+                            <button onClick={() => setTela(‘home’)} className=”flex items-center gap-2 mb-4 text-gray-400 hover:text-white”>  
+                                <Icon name=”ArrowLeft” size={20} />  
+                                <span className=”font-medium”>Voltar</span>  
+                            </button>  
+                            <h1 className=”text-xl font-bold mb-4”>{p.nome}</h1>  
+                            <div className=”grid gap-2”>  
+                                {Object.entries(p.dados).map(([dia, tr]) => (  
+                                    <button key={dia} onClick={() => { setDiaSel(dia); setTela(‘treino’); }}  
+                                        className={`bg-zinc-900 border ${tr.cor} border-l-4 p-4 text-left hover:bg-zinc-800 active:scale-98 transition-all`}>  
+                                        <div className=”flex justify-between items-center”>  
+                                            <div>  
+                                                <h3 className=”font-bold uppercase tracking-wide”>{dia}</h3>  
+                                                <p className=”text-sm text-gray-400 font-medium”>{tr.nome}</p>  
+                                                <p className=”text-xs text-gray-500 mt-1”>{tr.exercicios.length} exercícios</p>  
+                                            </div>  
+                                            <Icon name=”ArrowLeft” size={20} className=”rotate-180 text-gray-600” />  
+                                        </div>  
+                                    </button>  
+                                ))}  
+                            </div>  
+                            <button onClick={() => adicionarExercicio(Object.keys(p.dados)[0])}   
+                                className=”w-full mt-4 bg-zinc-800 border-2 border-dashed border-zinc-700 py-3 rounded font-bold text-gray-400 hover:text-white hover:border-cyan-600”>  
+                                + ADICIONAR EXERCÍCIO  
+                            </button>  
+                        </div>  
+                    </div>  
+                );  
+            }  
+  
+            // TELA TREINO  
+            If (tela === ‘treino’) {  
+                Const tr = programas[progSel].dados[diaSel];  
+                Const hoje = new Date().toISOString().split(‘T’)[0];  
+                Const seriesHoje = series.filter(s => s.prog === progSel && s.dia === diaSel && s.data.split(‘T’)[0] === hoje);  
+                  
+                Return (  
+                    <div className=”min-h-screen bg-black text-gray-100 p-4 pb-20”>  
+                        <div className=”max-w-5xl mx-auto”>  
+                            <button onClick={() => setTela(‘prog’)} className=”flex items-center gap-2 mb-4 text-gray-400 hover:text-white”>  
+                                <Icon name=”ArrowLeft” size={20} />  
+                                <span className=”font-medium”>Voltar</span>  
+                            </button>  
+                            <div className=”mb-4”>  
+                                <h1 className=”text-xl font-bold uppercase tracking-wide”>{diaSel}</h1>  
+                                <p className=”text-gray-400 font-medium”>{tr.nome}</p>  
+                            </div>  
+  
+                            {timerAtivo && (  
+                                <div className=”mb-4 bg-orange-950 border border-orange-700 p-3 rounded flex justify-between items-center”>  
+                                    <span className=”text-orange-400 font-bold”>⏱️ DESCANSO</span>  
+                                    <div className=”flex items-center gap-3”>  
+                                        <span className=”text-2xl font-bold text-orange-400 tabular-nums”>  
+                                            {Math.floor(timer/60)}:{(timer%60).toString().padStart(2,’0’)}  
+                                        </span>  
+                                        <button onClick={() => setTimerPausado(!timerPausado)}   
+                                            className=”bg-orange-600 hover:bg-orange-700 p-2 rounded active:scale-95 transition-all”>  
+                                            <Icon name={timerPausado ? “Play” : “Pause”} size={16} />  
+                                        </button>  
+                                    </div>  
+                                </div>  
+                            )}  
+  
+                            <div className=”space-y-2”>  
+                                {tr.exercicios.map((ex) => {  
+                                    Const sug = getSugestao(ex);  
+                                    Const seriesEx = seriesHoje.filter(s => s.ex === ex.nome);  
+                                    Const efetivas = seriesEx.filter(s => !s.aquec && s.rir <= 2).length;  
+                                      
+                                    Return <ExCard key={ex.id} ex={ex} sug={sug} seriesEx={seriesEx} efetivas={efetivas}  
+                                        onReg={(p,r,rir,aq,tipo,nota) => registrarSerie(progSel, diaSel, ex.nome, p, r, rir, aq, tipo, nota)}  
+                                        onEdit={editarSerie}  
+                                        onDel={deletarSerie}  
+                                        onRemove={() => removerExercicio(diaSel, ex.id)}  
+                                        editando={editandoSerie}  
+                                        setEditando={setEditandoSerie}  
+                                        getAquec={getAquecimento}  
+                                    />;  
+                                })}  
+                            </div>  
+                        </div>  
+                    </div>  
+                );  
+            }  
+  
+            // OUTRAS TELAS (Finalizar, Histórico, Volume, Config)  
+            If (tela === ‘finalizar’) {  
+                Return (  
+                    <div className=”min-h-screen bg-black text-gray-100 p-4”>  
+                        <div className=”max-w-5xl mx-auto”>  
+                            <h1 className=”text-xl font-bold mb-4”>FINALIZAR TREINO</h1>  
+                            <div className=”bg-zinc-900 border border-zinc-800 p-4 rounded mb-4”>  
+                                <label className=”block text-sm text-gray-400 mb-2”>Como foi o treino? (opcional)</label>  
+                                <textarea value={notaTreino} onChange={(e) => setNotaTreino(e.target.value)}  
+                                    className=”w-full bg-zinc-800 border border-zinc-700 rounded p-3 text-white resize-none”  
+                                    rows=”4” placeholder=”Ex: Sono bom (8h), energia alta, técnica perfeita no supino...” />  
+                            </div>  
+                            <div className=”flex gap-3”>  
+                                <button onClick={() => setTela(‘treino’)} className=”flex-1 bg-zinc-700 hover:bg-zinc-600 py-3 rounded font-bold”>  
+                                    CANCELAR  
+                                </button>  
+                                                             </div>  
+                            </div>  
+                        )}  
+                    </div>  
+  
+                    {show && (  
+                        <div className=”p-3 bg-black border-t border-zinc-800”>  
+                            {p && !aquec && (  
+                                <div className=”mb-3”>  
+                                    <button onClick={() => setShowAquec(!showAquec)}   
+                                        className=”text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1”>  
+                                        <Icon name=”TrendUp” size={12} />  
+                                        {showAquec ? ‘Ocultar’ : ‘Ver’} sugestão de aquecimento  
+                                    </button>  
+                                    {showAquec && getAquec(p).length > 0 && (  
+                                        <div className=”mt-2 p-2 bg-blue-950 border border-blue-800 rounded text-xs”>  
+                                            <p className=”text-blue-400 font-bold mb-2”>Sugestão de Aquecimento:</p>  
+                                            {getAquec(p).map((a, i) => (  
+                                                <div key={i} className=”flex justify-between mb-1 text-gray-300”>  
+                                                    <span>{a.nota}</span>  
+                                                    <span className=”font-bold”>{a.peso}kg × {a.reps} reps</span>  
+                                                </div>  
+                                            ))}  
+                                        </div>  
+                                    )}  
+                                </div>  
+                            )}  
+  
+                            <div className=”grid grid-cols-3 gap-2 mb-3”>  
+                                <div>  
+                                    <label className=”text-xs text-gray-500 uppercase tracking-wider block mb-1 font-medium”>Peso (kg)</label>  
+                                    <input type=”number” step=”0.5” value={p} onChange={(e) => setP(e.target.value)}  
+                                        className=”w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-white font-bold text-lg focus:outline-none focus:border-cyan-500 transition-colors”  
+                                        placeholder=”80” />  
+                                </div>  
+                                <div>  
+                                    <label className=”text-xs text-gray-500 uppercase tracking-wider block mb-1 font-medium”>Reps</label>  
+                                    <input type=”number” value={r} onChange={(e) => setR(e.target.value)}  
+                                        className=”w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-white font-bold text-lg focus:outline-none focus:border-cyan-500 transition-colors”  
+                                        placeholder=”8” />  
+                                </div>  
+                                <div>  
+                                    <label className=”text-xs text-gray-500 uppercase tracking-wider block mb-1 font-medium”>RIR</label>  
+                                    <input type=”number” value={rir} onChange={(e) => setRir(e.target.value)}  
+                                        className=”w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-white font-bold text-lg focus:outline-none focus:border-cyan-500 transition-colors”  
+                                        placeholder=”2” />  
+                                </div>  
+                            </div>  
+  
+                            <div className=”mb-3 space-y-2”>  
+                                <label className=”flex items-center gap-2 text-sm cursor-pointer hover:text-gray-300”>  
+                                    <input type=”checkbox” checked={aquec} onChange={(e) => setAquec(e.target.checked)}   
+                                        className=”w-4 h-4 accent-blue-600” />  
+                                    <span className=”text-gray-400”>Série de aquecimento</span>  
+                                </label>  
+  
+                                {!aquec && (  
+                                    <div>  
+                                        <label className=”text-xs text-gray-500 uppercase tracking-wider block mb-1 font-medium”>Tipo de Série</label>  
+                                        <select value={tipo} onChange={(e) => setTipo(e.target.value)}  
+                                            className=”w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500”>  
+                                            <option value=”normal”>Normal</option>  
+                                            <option value=”ss”>Super-série</option>  
+                                            <option value=”ds”>Drop-set</option>  
+                                        </select>  
+                                    </div>  
+                                )}  
+  
+                                <div>  
+                                    <label className=”text-xs text-gray-500 uppercase tracking-wider block mb-1 font-medium”>Nota (opcional)</label>  
+                                    <input type=”text” value={nota} onChange={(e) => setNota(e.target.value)}  
+                                        Placeholder=”Ex: Cotovelo doeu, técnica boa...”  
+                                        className=”w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500” />  
+                                </div>  
+                            </div>  
+  
+                            {p && r && (  
+                                <div className=”mb-3 p-3 bg-zinc-900 border border-zinc-800 rounded”>  
+                                    <p className=”text-xs text-gray-500 uppercase mb-1”>1RM Estimado</p>  
+                                    <p className=”text-2xl font-bold text-purple-400”>{Math.round(parseFloat(p) * (1 + parseInt® / 30))} kg</p>  
+                                </div>  
+                            )}  
+  
+                            <button onClick={submit} disabled={!p || !r}  
+                                className=”w-full bg-cyan-600 hover:bg-cyan-700 disabled:bg-zinc-800 disabled:text-gray-600 disabled:cursor-not-allowed py-3 rounded font-bold uppercase tracking-wider active:scale-95 transition-all”>  
+                                {aquec ? ‘📝 REGISTRAR AQUECIMENTO’ : ‘✅ REGISTRAR SÉRIE’}  
+                            </button>  
+                        </div>  
+                    )}  
+                </div>  
+            );  
+        }  
+  
+        // RENDERIZAR APP  
+        ReactDOM.render(<App />, document.getElementById(‘root’));  
+    </script>  
+</body>  
 </html>
